@@ -15,6 +15,35 @@ defmodule PigLatin do
   """
   @spec translate(phrase :: String.t()) :: String.t()
   def translate(phrase) do
+    phrase
+      |>String.split
+      |>Enum.map(&translator/1)
+      |>Enum.join(" ")
+  end
+
+  defp translator(word) do
+    case consonant_or_vowel(word) do
+      {:vowel,a,b} -> a<>b<>"ay"
+      {:consonant,a,b} -> b<>a<>"ay"
+    end
+  end
+
+  defp consonant_or_vowel(word) do
+    case word do
+      "yt"<>rest -> {:vowel,"yt",rest}
+      "xr"<>rest -> {:vowel,"xr",rest}
+      "a"<>rest -> {:vowel,"a",rest}
+      "e"<>rest -> {:vowel,"e",rest}
+      "i"<>rest -> {:vowel,"i",rest}
+      "o"<>rest -> {:vowel,"o",rest}
+      "u"<>rest -> {:vowel,"u",rest}
+      "ch"<>rest -> {:consonant,"ch",rest}
+      "qu"<>rest -> {:consonant,"qu",rest}
+      "squ"<>rest -> {:consonant,"squ",rest}
+      "thr"<>rest -> {:consonant,"thr",rest}
+      "th"<>rest -> {:consonant,"th",rest}
+      "sch"<>rest -> {:consonant,"sch",rest}
+      other -> other |> String.split_at(1) |> Tuple.insert_at(0, :consonant)
+    end
   end
 end
-
